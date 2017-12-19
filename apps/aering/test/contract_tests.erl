@@ -14,14 +14,15 @@ contracts_test_() ->
         end} || {Contract, Expected} <- contracts() ]}.
 
 contracts() ->
-  [{"voting",
-    "Delegate before vote\n"
-    "Cake: 1\n"
-    "Beer: 2\n"
-    "Winner: Beer\n"
-    "Delegate after vote\n"
-    "Cake: 1\n"
-    "Beer: 2\n"
-    "Winner: Beer\n"
-  }].
+    [].
+  %% [{"voting",
+  %%   "Delegate before vote\n"
+  %%   "Cake: 1\n"
+  %%   "Beer: 2\n"
+  %%   "Winner: Beer\n"
+  %%   "Delegate after vote\n"
+  %%   "Cake: 1\n"
+  %%   "Beer: 2\n"
+  %%   "Winner: Beer\n"
+  %% }].
 
