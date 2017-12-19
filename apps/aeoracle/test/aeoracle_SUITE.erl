@@ -7,36 +7,45 @@
 
 %% common_test exports
 -export([ all/0
-        , init_per_suite/1
-        , end_per_suite/1
-        ,
-         init_per_testcase/2, end_per_testcase/2]).
+        , groups/0
+        ]).
 
 %% test case exports
--export([query_oracle/1, query_oracle_negative/1,
-         query_response/1, query_response_negative/1,
-         register_oracle/1, register_oracle_negative/1]).
+-export([ query_oracle/1
+        , query_oracle_negative/1
+        , query_response/1
+        , query_response_negative/1
+        , register_oracle/1
+        , register_oracle_negative/1
+        ]).
 
 -include_lib("common_test/include/ct.hrl").
 
 -include_lib("apps/aeoracle/include/oracle_txs.hrl").
 
+%%%===================================================================
+%%% Common test framework
+%%%===================================================================
+
 all() ->
-    [query_oracle, query_oracle_negative,
-     query_response, query_response_negative,
-     register_oracle, register_oracle_negative].
+    [{group, all_tests}
+    ].
 
-init_per_suite(Cfg) ->
-    Cfg.
+groups() ->
+    [ {all_tests, [sequence], [ {group, transactions}
+                              ]}
+    , {transactions, [sequence], [ register_oracle
+                                 , register_oracle_negative
+                                 , query_oracle
+                                 , query_oracle_negative
+                                 , query_response
+                                 , query_response_negative
+                                 ]}
+    ].
 
-end_per_suite(_) ->
-    ok.
-
-init_per_testcase(_, Config) ->
-    Config.
-
-end_per_testcase(_, _) ->
-    ok.
+%%%===================================================================
+%%% Register oracle
+%%%===================================================================
 
 register_oracle_negative(_Cfg) ->
     {PubKey, S1} = aeo_test_utils:setup_new_account(aeo_test_utils:new_state()),
@@ -77,6 +86,10 @@ register_oracle(_Cfg) ->
     {ok, [SignedTx], Trees1} = aec_tx:apply_signed([SignedTx], Trees, Height),
     S2       = aeo_test_utils:set_trees(Trees1, S1),
     {PubKey, S2}.
+
+%%%===================================================================
+%%% Query oracle
+%%%===================================================================
 
 query_oracle_negative(Cfg) ->
     {OracleKey, S}  = register_oracle(Cfg),
@@ -123,6 +136,10 @@ query_oracle(Cfg) ->
         aec_tx:apply_signed([SignedTx], Trees, CurrHeight),
     S3 = aeo_test_utils:set_trees(Trees2, S2),
     {OracleKey, aeo_interaction:new(Q1, CurrHeight), S3}.
+
+%%%===================================================================
+%%% Query resoponse
+%%%===================================================================
 
 query_response_negative(Cfg) ->
     {OracleKey, OIO, S1} = query_oracle(Cfg),
