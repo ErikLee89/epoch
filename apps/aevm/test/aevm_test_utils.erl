@@ -145,7 +145,7 @@ is_external_available() ->
     case external_dir() of
       false -> false;
       DirPath ->
-        VMTests = filename:join([DirPath, "etherium_tests"]),
+        VMTests = filename:join([DirPath, "ethereum_tests"]),
         filelib:is_dir(VMTests)
     end.
 
@@ -170,7 +170,7 @@ get_config_file(DirPath, TestName) ->
 
 config_filename(DirPath, TestName) ->
     filename:join([ external_dir()
-                  , "etherium_tests"
+                  , "ethereum_tests"
                   , DirPath
                   , atom_to_list(TestName) ++ ".json"]).
 

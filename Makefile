@@ -130,10 +130,10 @@ eunit:
 aevm-test: aevm-test-deps
 	@./rebar3 eunit --application=aevm
 
-aevm-test-deps: $(AEVM_EXTERNAL_TEST_DIR)/etherium_tests
+aevm-test-deps: $(AEVM_EXTERNAL_TEST_DIR)/ethereum_tests
 
-$(AEVM_EXTERNAL_TEST_DIR)/etherium_tests:
-	@git clone https://github.com/ethereum/tests.git $(AEVM_EXTERNAL_TEST_DIR)/etherium_tests
+$(AEVM_EXTERNAL_TEST_DIR)/ethereum_tests:
+	@git clone https://github.com/ethereum/tests.git $(AEVM_EXTERNAL_TEST_DIR)/ethereum_tests
 
 
 venv-present:
