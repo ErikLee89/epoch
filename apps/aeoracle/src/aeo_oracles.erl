@@ -59,6 +59,8 @@
              ]).
 
 -define(PUB_SIZE, 65).
+-define(ORACLE_TYPE, <<"oracle">>).
+-define(ORACLE_VSN, 1).
 
 %%%===================================================================
 %%% API
@@ -79,17 +81,34 @@ new(RTx, BlockHeight) ->
                },
     assert_fields(O).
 
--spec serialize(oracle()) -> binary().
-serialize(#oracle{} = I) ->
-    term_to_binary(I).
+-spec serialize(oracle()) -> list(map()).
+serialize(#oracle{} = O) ->
+    msgpack:pack([ #{<<"type">>            => ?ORACLE_TYPE}
+                 , #{<<"vsn">>             => ?ORACLE_VSN}
+                 , #{<<"owner">>           => owner(O)}
+                 , #{<<"query_format">>    => query_format(O)}
+                 , #{<<"response_format">> => response_format(O)}
+                 , #{<<"query_fee">>       => query_fee(O)}
+                 , #{<<"expires">>         => expires(O)}
+                 ]).
 
 -spec deserialize(binary()) -> oracle().
-deserialize(B) ->
-    try binary_to_term(B) of
-        #oracle{} = I -> I;
-        Other -> error({not_interaction, Other})
-    catch _:_ -> error(invalid_binary)
-    end.
+deserialize(Bin) ->
+    {ok, List} = msgpack:unpack(Bin),
+    [ #{<<"type">>            := ?ORACLE_TYPE}
+    , #{<<"vsn">>             := ?ORACLE_VSN}
+    , #{<<"owner">>           := Owner}
+    , #{<<"query_format">>    := QueryFormat}
+    , #{<<"response_format">> := ResponseFormat}
+    , #{<<"query_fee">>       := QueryFee}
+    , #{<<"expires">>         := Expires}
+    ] = List,
+    #oracle{ owner           = Owner
+           , query_format    = QueryFormat
+           , response_format = ResponseFormat
+           , query_fee       = QueryFee
+           , expires         = Expires
+           }.
 
 %%%===================================================================
 %%% Getters

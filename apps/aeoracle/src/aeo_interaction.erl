@@ -30,6 +30,9 @@
 
 -include_lib("apps/aecore/include/common.hrl").
 
+-define(ORACLE_INTERACTION_TYPE, <<"oracle_i">>).
+-define(ORACLE_INTERACTION_VSN, 1).
+
 %%%===================================================================
 %%% Types
 %%%===================================================================
@@ -81,15 +84,40 @@ id(I) ->
 
 -spec serialize(interaction()) -> binary().
 serialize(#interaction{} = I) ->
-    term_to_binary(I).
+    {delta, RespTTLValue} = response_ttl(I),
+    msgpack:pack([ #{<<"type">>            => ?ORACLE_INTERACTION_TYPE}
+                 , #{<<"vsn">>             => ?ORACLE_INTERACTION_VSN}
+                 , #{<<"sender_address">>  => sender_address(I)}
+                 , #{<<"sender_nonce">>    => sender_nonce(I)}
+                 , #{<<"oracle_address">>  => oracle_address(I)}
+                 , #{<<"response">>        => response(I)}
+                 , #{<<"expires">>         => expires(I)}
+                 , #{<<"response_ttl">>    => RespTTLValue}
+                 , #{<<"fee">>             => fee(I)}
+                 ]).
 
 -spec deserialize(binary()) -> interaction().
 deserialize(B) ->
-    try binary_to_term(B) of
-        #interaction{} = I -> I;
-        Other -> error({not_interaction, Other})
-    catch _:_ -> error(invalid_binary)
-    end.
+    {ok, List} = msgpack:unpack(B),
+    [ #{<<"type">>            := ?ORACLE_INTERACTION_TYPE}
+    , #{<<"vsn">>             := ?ORACLE_INTERACTION_VSN}
+    , #{<<"sender_address">>  := SenderAddress}
+    , #{<<"sender_nonce">>    := SenderNonce}
+    , #{<<"oracle_address">>  := OracleAddress}
+    , #{<<"response">>        := Response}
+    , #{<<"expires">>         := Expires}
+    , #{<<"response_ttl">>    := RespTTLValue}
+    , #{<<"fee">>             := Fee}
+    ] = List,
+    #interaction{ sender_address = SenderAddress
+                , sender_nonce   = SenderNonce
+                , oracle_address = OracleAddress
+                , response       = Response
+                , expires        = Expires
+                , response_ttl   = {delta, RespTTLValue}
+                , fee            = Fee
+                }.
+
 
 %%%===================================================================
 %%% Getters
