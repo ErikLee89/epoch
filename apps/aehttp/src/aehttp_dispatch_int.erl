@@ -110,6 +110,22 @@ handle_request('PostOracleResponseTx', #{'OracleResponseTx' := OracleResponseTxO
             {404, [], #{reason => <<"Keys not configured">>}}
     end;
 
+handle_request('GetActiveRegisteredOracles', _Req, _Context) ->
+    %% TODO: Implement me
+    {501, [], #{}};
+
+handle_request('GetOracleQuestions', _Req, _Context) ->
+    %% TODO: Implement me
+    {501, [], #{}};
+
+handle_request('PostOracleSubscribe', _Req, _Context) ->
+    %% TODO: Implement me
+    {501, [], #{}};
+
+handle_request('PostOracleUnsubscribe', _Req, _Context) ->
+    %% TODO: Implement me
+    {501, [], #{}};
+
 handle_request('GetPubKey', _, _Context) ->
     case aec_keys:pubkey() of
         {ok, Pubkey} ->
