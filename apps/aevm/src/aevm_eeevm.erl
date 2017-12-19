@@ -1410,6 +1410,6 @@ log_topics(AccountAddress, Topics) ->
 %% Account Functions
 %% ------------------------------------------------------------------------
 
-create_account(Value, CodeArea, State) ->
+create_account(_Value, _CodeArea, State) ->
     %% TODO: Do actual account creation
     {16#DEADC0DE, State}.
