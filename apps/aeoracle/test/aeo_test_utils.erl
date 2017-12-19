@@ -6,6 +6,7 @@
 -module(aeo_test_utils).
 
 -export([ new_state/0
+        , oracles/1
         , priv_key/2
         , query_tx/3
         , query_tx/4
@@ -47,6 +48,13 @@ next_nonce(PubKey, S) ->
 
 priv_key(PubKey, State) ->
     maps:get(PubKey, key_pairs(State)).
+
+%%%===================================================================
+%%% Info API
+%%%===================================================================
+
+oracles(State) ->
+    aec_trees:oracles(trees(State)).
 
 %%%===================================================================
 %%% Register tx
