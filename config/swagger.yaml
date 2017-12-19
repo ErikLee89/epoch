@@ -237,6 +237,7 @@ paths:
             $ref: '#/definitions/Error'
       security: []
   /oracles:
+  ## Not implemented yet, returns HTTP 501 response code
     get:
       tags:
         - internal
@@ -253,6 +254,7 @@ paths:
             $ref: '#/definitions/RegisteredOracles'
       security: []
   /oracle-questions:
+  ## Not implemented yet, returns HTTP 501 response code
     get:
       tags:
         - internal
@@ -356,6 +358,7 @@ paths:
             $ref: '#/definitions/Error'
       security: []
   /oracle-subscribe:
+  ## Not implemented yet, returns HTTP 501 response code
     post:
       tags:
         - internal
@@ -381,6 +384,7 @@ paths:
             $ref: '#/definitions/Error'
       security: []
   /oracle-unsubscribe:
+  ## Not implemented yet, returns HTTP 501 response code
     post:
       tags:
         - internal
