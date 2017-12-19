@@ -44,10 +44,10 @@ ast_to_icode([{contract, Attribs, {con, _, Name}, Code}|Rest], Icode) ->
     end;
 ast_to_icode([], Icode) -> Icode.
 
-ast_code_to_icode([{type_def, Attrib, _, _, _}|Rest], Icode) ->
+ast_code_to_icode([{type_def,_Attrib, _, _, _}|Rest], Icode) ->
     %% TODO: Handle types
     ast_code_to_icode(Rest, Icode);
-ast_code_to_icode([{letfun, Attrib, Name, Args, What, Body}|Rest], Icode) ->
+ast_code_to_icode([{letfun,_Attrib, Name, Args,_What, Body}|Rest], Icode) ->
     %% TODO: Handle types
     FunName = ast_id(Name),
     %% TODO: push funname to env
@@ -68,7 +68,7 @@ ast_args([{arg, _, Name, Type}|Rest], Acc) ->
 ast_args([], Acc) -> lists:reverse(Acc).
                                  
 
-ast_body({id, _, Name}, Icode) ->
+ast_body({id, _,_Name},_Icode) ->
     %% TODO Look up id in env
     ['DUP'].
     
