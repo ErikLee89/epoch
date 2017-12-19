@@ -86,7 +86,7 @@ pp_args([{Arg, Size}]) ->
         256 -> io_lib:format("0x~64.16.0B",[Arg])
     end;
 pp_args([{Arg, Size}|Args]) ->
-    [pp([{Arg, Size}]), " ", pp_args(Args)].
+    [pp_args([{Arg, Size}]), " ", pp_args(Args)].
 
 next(Address, Ops, Instr, Assembly) ->
     pp(Address+1, Ops, [Instr|Assembly]).
